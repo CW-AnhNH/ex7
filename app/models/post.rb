@@ -10,10 +10,20 @@ class Post < ApplicationRecord
     where("like_count >= 10")
   end
 
-  def user_has_commented
-    user_ids = comments.pluck(:user_id)
-    User.where(id: user_ids)
-    --> OR
-    User.joins(:comments).where(comments: { post_id: id })
-  end
+  # def user_has_commented
+  #   user_ids = comments.pluck(:user_id)
+  #   User.where(id: user_ids)
+  #   --> OR
+  #   User.joins(:comments).where(comments: { post_id: id })
+  # end
 end
+
+Post.where('id <= 5').includes(:user).each do |post|
+  puts "Post title: #{post.title}, User name: #{post.user.name}"
+end
+
+users_data = User.pluck(:id, :name).to_h
+Post.where('id <= 5').each do |post|
+  puts "Post title: #{post.title}, User name: #{users_data[post.user_id]}"
+end
+

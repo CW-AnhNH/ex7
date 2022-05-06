@@ -1,8 +1,11 @@
 class User < ApplicationRecord
   has_many :posts
   has_many :comments
-  has_many :followings, as: :follower, class_name: 'Follow'
-  has_many :followers, as: :following, class_name: 'Follow'
+  # has_many :followings, as: :follower, class_name: 'Follow'
+  # has_many :followers, as: :following, class_name: 'Follow'
+  has_many :followings, class_name: 'Follow', foreign_key: "follower_id"
+  has_many :followers, class_name: 'Follow', foreign_key: "following_id"
+  has_many :test, through: :followers, source: :user
 
   scope :search_user_name, ->(keyword) do
     if keyword.present?
